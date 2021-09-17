@@ -53,6 +53,9 @@ dataset_dict['age_alias'] = dict((a, i)
                                  for i, a in dataset_dict['age_id'].items())
 
 
+# Parsing / Preprocessing
+
+
 def parse_dataset(dataset_path, ext='jpg'):
     """
     Used to extract information about our dataset. It does iterate over all images and return a DataFrame with
@@ -86,6 +89,22 @@ def parse_dataset(dataset_path, ext='jpg'):
     return df
 
 
+def parse_predictions(predictions_path):
+    df = pd.read_csv(predictions_path, index_col=0)
+
+    pred_true = []
+    for _, row in df.iterrows():
+        if(row['gender_true'] == row['gender_pred']):
+            pred_true.append(1)
+        else:
+            pred_true.append(0)
+
+    df['pred_true'] = pred_true
+    df = df.drop(columns=['gender_pred']).rename(columns={'gender_true': 'gender', 'age_true': 'age', 'race_true': 'race'})
+
+    return df
+
+
 def preprocess_image(img_path):
     """
     Used to perform some minor preprocessing on the image before inputting into the network.
@@ -96,6 +115,20 @@ def preprocess_image(img_path):
 
     return im
 
+
+def convert_id_to_alias(df):
+    df_alias = df.copy()
+
+    df_alias['race'] = df_alias['race'].apply(lambda race: dataset_dict['race_id'][race])
+    df_alias['gender'] = df_alias['gender'].apply(lambda gender: dataset_dict['gender_id'][gender])
+
+    return df_alias
+
+
+# --------------------------------------------------------------
+
+
+# Plotting
 
 def plot_select_images(df, n=16, include_prediction=False):
     df_selection = df.sample(n, random_state=1).reset_index()
@@ -270,7 +303,8 @@ def plot_gender_distribution_by_age(df):
     df_binned['age_binned'] = age_binned
 
     for ax, age in zip(axes, dataset_dict['age_alias'].keys()):
-        df_age = df_binned.loc[df_binned['age_binned'] == dataset_dict['age_alias'][age]]
+        df_age = df_binned.loc[df_binned['age_binned']
+                               == dataset_dict['age_alias'][age]]
 
         gender = df_age['gender']
         labels = gender.value_counts().sort_index().index.tolist()
@@ -278,6 +312,7 @@ def plot_gender_distribution_by_age(df):
         ax.pie(counts, labels=labels, autopct="%.1f%%", explode=[
                0.01]*2, pctdistance=0.5, colors=[colors[1], colors[-2]], startangle=90)
         ax.set_title(f"{age}")
-    
 
     plt.tight_layout()
+
+# ----------------------------------------------------------------
