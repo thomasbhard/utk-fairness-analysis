@@ -125,6 +125,21 @@ def convert_id_to_alias(df):
     return df_alias
 
 
+def group_to_label(groups):
+    labels = []
+    for group in groups:
+        label = group
+        if 'age' in group:
+            id = int(group.split('_')[1])
+            label = dataset_dict['age_id'][id]
+        elif 'race' in group:
+            id = int(group.split('_')[1])
+            label = dataset_dict['race_id'][id]
+
+        labels.append(label)
+
+    return labels
+
 # --------------------------------------------------------------
 
 
@@ -314,5 +329,20 @@ def plot_gender_distribution_by_age(df):
         ax.set_title(f"{age}")
 
     plt.tight_layout()
+
+
+def plot_metrics_for_all_groups(metrics):
+    groups = list(metrics.keys())
+    heights = list(metrics.values())
+
+    min_value = min(heights) * 0.9
+    max_value = max(heights) * 1.1
+
+    plt.figure(figsize=(4, 6))
+    plt.xlim(min_value, max_value)
+    plt.gca().invert_yaxis()
+    plt.barh(groups, heights, tick_label=group_to_label(groups), align='center', height=0.7, color=colors[4])
+    
+
 
 # ----------------------------------------------------------------
