@@ -331,9 +331,44 @@ def plot_gender_distribution_by_age(df):
     plt.tight_layout()
 
 
-def plot_metrics_for_all_groups(metrics):
-    groups = list(metrics.keys())
-    heights = list(metrics.values())
+def plot_scores_for_all_groups(scores, max_cols=4):
+    metrics = list(scores.keys())
+    groups = list(scores[metrics[0]].keys())
+
+    num_metrics = len(metrics)
+
+    cols = min(num_metrics, max_cols)
+    rows = int(math.ceil(num_metrics / cols))
+
+
+    plt.figure(figsize=(int(cols*4), int(rows*6)))
+    for i, metric in enumerate(metrics):
+        heights = list(scores[metric].values())
+
+
+        min_value = min(heights)
+        max_value = max(heights)
+
+        x_min = min_value * 0.9 if min_value > 0 else min_value * 1.1
+        x_max = max_value * 1.1 if max_value > 0 else max_value * 0.9
+
+        row = int(math.floor(i/cols))
+        col = i%cols
+
+        ax = plt.subplot2grid((rows, cols), (row, col))
+        ax.set_xlim(x_min, x_max)
+        ax.invert_yaxis()
+
+        ax.barh(groups, heights, tick_label=group_to_label(groups), align='center', height=0.7, color=colors[4])
+        ax.set_title(metric)
+
+        plt.tight_layout()
+
+
+
+def plot_metric_for_all_groups(metric):
+    groups = list(metric.keys())
+    heights = list(metric.values())
 
     min_value = min(heights) * 0.9
     max_value = max(heights) * 1.1
