@@ -14,7 +14,11 @@ class UtkFaceDataGenerator():
         self.train_test_split = train_test_split
         self.im_width = im_width
         self.im_height = im_height
-        self.get_weight = get_weight
+        if get_weight is not None:
+          self.get_weight = get_weight
+        else:
+          # if there is no function for get_weight specified return 1 for all samples
+          self.get_weight = lambda g,r,a: 1
         
     def generate_split_indexes(self):
         p = np.random.RandomState(seed=42).permutation(len(self.df))
@@ -97,5 +101,6 @@ class UtkFaceDataGenerator():
 
 
 if __name__ == "__main__":
-    data_generator = UtkFaceDataGenerator(df)
-    train_idx, valid_idx, test_idx = data_generator.generate_split_indexes()
+  pass
+  # data_generator = UtkFaceDataGenerator(df)
+  # train_idx, valid_idx, test_idx = data_generator.generate_split_indexes()
