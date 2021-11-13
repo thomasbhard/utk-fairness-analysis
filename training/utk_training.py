@@ -15,7 +15,7 @@ default_parameters = {
     'IM_WIDTH': 198,
     'IM_HEIGHT': 198,
     'TRAIN_TEST_SPLIT': 0.7,
-    'TRAIN_WITH_WEIGTHS': False,
+    'TRAIN_WITH_WEIGHTS': False,
     'INIT_LR': 1e-4,
     'EPOCHS': 1,
     'BATCH_SIZE': 32,
@@ -34,7 +34,7 @@ def main(parameters):
     IM_HEIGHT = parameters['IM_HEIGHT']
 
     TRAIN_TEST_SPLIT = parameters['TRAIN_TEST_SPLIT']
-    TRAIN_WITH_WEIGTHS = parameters['TRAIN_WITH_WEIGHTS']
+    TRAIN_WITH_WEIGHTS = parameters['TRAIN_WITH_WEIGHTS']
 
     INIT_LR = parameters['INIT_LR']
     EPOCHS = parameters['EPOCHS']
@@ -94,8 +94,8 @@ def main(parameters):
 
     batch_size = BATCH_SIZE
     valid_batch_size = BATCH_SIZE_VALID
-    train_gen = data_generator.generate_images(train_idx, is_training=True, batch_size=batch_size, include_weights=TRAIN_WITH_WEIGTHS)
-    valid_gen = data_generator.generate_images(valid_idx, is_training=True, batch_size=valid_batch_size, include_weights=TRAIN_WITH_WEIGTHS)
+    train_gen = data_generator.generate_images(train_idx, is_training=True, batch_size=batch_size, include_weights=TRAIN_WITH_WEIGHTS)
+    valid_gen = data_generator.generate_images(valid_idx, is_training=True, batch_size=valid_batch_size, include_weights=TRAIN_WITH_WEIGHTS)
 
     callbacks = [
         ModelCheckpoint(os.path.join(outputdir_path, "model_checkpoint"), monitor='val_loss')
