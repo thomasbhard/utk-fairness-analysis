@@ -22,7 +22,7 @@ default_parameters = {
     'BATCH_SIZE_VALID': 32,
     'BATCH_SIZE_TEST': 128,
     'dataset_path': '/content/UTKFaceFull/UTKFace',
-    'output_dir': 'content/models',
+    'output_dir': '/content/models',
 }
 
 
@@ -48,7 +48,7 @@ def main(parameters):
 
     outputdir_name = time.strftime("%Y%m%d-%H%M%S", time.gmtime(time.time()))
     outputdir_path = os.path.join(parameters['output_dir'], outputdir_name)
-    os.mkdir(outputdir_path)
+    os.makedirs(outputdir_path)
 
     # --------------------------
 
