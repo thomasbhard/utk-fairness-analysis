@@ -10,27 +10,44 @@ from keras.callbacks import ModelCheckpoint
 # r'C:\Users\thoma\Documents\_FAIRALGOS\utk-fairness-analysis\dataset\UTKFace'
 # r'C:\Users\thoma\Documents\_FAIRALGOS\utk-fairness-analysis\models'
 
-def main(dataset_path, output_dir):
+
+default_parameters = {
+    'IM_WIDTH': 198,
+    'IM_HEIGHT': 198,
+    'TRAIN_TEST_SPLIT': 0.7,
+    'TRAIN_WITH_WEIGTHS': False,
+    'INIT_LR': 1e-4,
+    'EPOCHS': 1,
+    'BATCH_SIZE': 32,
+    'BATCH_SIZE_VALID': 32,
+    'BATCH_SIZE_TEST': 128,
+    'dataset_path': '/content/UTKFaceFull/UTKFace',
+    'output_dir': 'content/models',
+}
+
+
+
+def main(parameters):
 
     # GLOBAL PARAMETERS
-    IM_WIDTH = IM_HEIGHT = 198
+    IM_WIDTH = parameters['IM_WIDTH']
+    IM_HEIGHT = parameters['IM_HEIGHT']
 
-    TRAIN_TEST_SPLIT = 0.7
-    TRAIN_WITH_WEIGTHS = False
+    TRAIN_TEST_SPLIT = parameters['TRAIN_TEST_SPLIT']
+    TRAIN_WITH_WEIGTHS = parameters['TRAIN_WITH_WEIGHTS']
 
-    INIT_LR = 1e-4
-    EPOCHS = 1
-    BATCH_SIZE = 32
-    BATCH_SIZE_VALID = 32
-    BATCH_SIZE_TEST = 128
+    INIT_LR = parameters['INIT_LR']
+    EPOCHS = parameters['EPOCHS']
+    BATCH_SIZE = parameters['BATCH_SIZE']
+    BATCH_SIZE_VALID = parameters['BATCH_SIZE_VALID']
+    BATCH_SIZE_TEST = parameters['BATCH_SIZE_TEST']
 
     # -------------------------
 
     # PATHS AND FILENAMES
 
-    dataset_folder_name = dataset_path
     outputdir_name = time.strftime("%Y%m%d-%H%M%S", time.gmtime(time.time()))
-    outputdir_path = os.path.join(output_dir, outputdir_name)
+    outputdir_path = os.path.join(parameters['output_dir'], outputdir_name)
     os.mkdir(outputdir_path)
 
     # --------------------------
@@ -38,20 +55,8 @@ def main(dataset_path, output_dir):
 
     # SAVE PARAMETERS
 
-    parameters = {
-        'IM_WIDTH': IM_WIDTH,
-        'IM_HEIGHT': IM_HEIGHT,
-        'TRAIN_TEST_SPLIT': TRAIN_TEST_SPLIT,
-        'TRAIN_WITH_WEIGTHS': TRAIN_WITH_WEIGTHS,
-        'INIT_LR': INIT_LR,
-        'EPOCHS': EPOCHS,
-        'BATCH_SIZE': BATCH_SIZE,
-        'BATCH_SIZE_VALID': BATCH_SIZE_VALID,
-        'BATCH_SIZE_TEST': BATCH_SIZE_TEST,
-        'dataset_folder_name': dataset_folder_name,
-        'outputdir_name': outputdir_name,
-        'outputdir_path': outputdir_path
-    }
+    parameters['outputdir_path'] = outputdir_path
+
 
     with open(os.path.join(outputdir_path, 'parameters.json'), 'w') as fp:
         json.dump(parameters, fp)
@@ -60,7 +65,7 @@ def main(dataset_path, output_dir):
 
     # PREPROCESSING
 
-    df = parse_dataset(dataset_folder_name)
+    df = parse_dataset(parameters['dataset_path'])
 
     data_generator = UtkFaceDataGenerator(df, dataset_dict, TRAIN_TEST_SPLIT, IM_WIDTH, IM_HEIGHT, get_weight=None)
     train_idx, valid_idx, test_idx = data_generator.generate_split_indexes()
