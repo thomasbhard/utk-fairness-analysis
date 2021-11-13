@@ -236,6 +236,10 @@ def plot_age_distribution(df, title="Age distribution", bins=20):
     plt.title(title, fontsize=14)
     # plt.show()
 
+def pie_values(pct, allvals):
+    absolute = int(round(pct/100.*np.sum(allvals)))
+    return "{:.1f}%\n({:d})".format(pct, absolute)
+
 
 def plot_distributions(df):
 
@@ -250,7 +254,7 @@ def plot_distributions(df):
     gender = df['gender']
     labels = gender.value_counts().sort_index().index.tolist()
     counts = gender.value_counts().sort_index().values.tolist()
-    ax1.pie(counts, labels=labels, autopct="%.1f%%", explode=[
+    ax1.pie(counts, labels=labels, autopct=lambda pct: pie_values(pct, counts), explode=[
             0.01]*2, pctdistance=0.5, colors=[colors[1], colors[-2]], startangle=90)
     ax1.set_title('Gender distribution')
 
@@ -259,7 +263,7 @@ def plot_distributions(df):
     race = df['race']
     labels = race.value_counts().sort_index().index.tolist()
     counts = race.value_counts().sort_index().values.tolist()
-    ax2.pie(counts, labels=labels, autopct="%.1f%%", explode=[
+    ax2.pie(counts, labels=labels, autopct=lambda pct: pie_values(pct, counts), explode=[
             0.01]*5, pctdistance=0.6, colors=colors[1:], startangle=90)
     ax2.set_title('Race distribution')
 
@@ -291,11 +295,33 @@ def plot_gender_distribution_by_race(df):
         gender = df_race['gender']
         labels = gender.value_counts().sort_index().index.tolist()
         counts = gender.value_counts().sort_index().values.tolist()
-        ax.pie(counts, labels=labels, autopct="%.1f%%", explode=[
+        ax.pie(counts, labels=labels, autopct=lambda pct: pie_values(pct, counts), explode=[
                0.01]*2, pctdistance=0.5, colors=[colors[1], colors[-2]], startangle=90)
         ax.set_title(f"{race}")
 
     plt.tight_layout()
+
+def plot_age_distribution_by_gender(df):
+
+    plt.figure(figsize=(10, 10))
+
+    ax1 = plt.subplot2grid((2,1), (0, 0))
+    ax2 = plt.subplot2grid((2,1), (1, 0))
+
+    axes = [ax1, ax2]
+
+    for ax, gender in zip(axes, dataset_dict['gender_alias'].keys()):
+        df_gender = df.loc[df['gender'] == gender]
+
+        age = df_gender['age']
+        
+        sns.set(rc={'axes.facecolor': colors[0], 'figure.facecolor': 'white'})
+        ax.hist(age, bins=20, color=colors[-1])
+        ax.set_title(f'Age distribution by gender: {gender}')
+        ax.set_xlabel("Age")
+        ax.set_ylabel("Number of images")
+
+        plt.tight_layout()
 
 
 def plot_gender_distribution_by_age(df):
@@ -324,7 +350,7 @@ def plot_gender_distribution_by_age(df):
         gender = df_age['gender']
         labels = gender.value_counts().sort_index().index.tolist()
         counts = gender.value_counts().sort_index().values.tolist()
-        ax.pie(counts, labels=labels, autopct="%.1f%%", explode=[
+        ax.pie(counts, labels=labels, autopct=lambda pct: pie_values(pct, counts), explode=[
                0.01]*2, pctdistance=0.5, colors=[colors[1], colors[-2]], startangle=90)
         ax.set_title(f"{age}")
 
