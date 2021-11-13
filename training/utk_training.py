@@ -23,7 +23,6 @@ default_parameters = {
     'BATCH_SIZE_TEST': 128,
     'dataset_path': '/content/UTKFaceFull/UTKFace',
     'output_dir': '/content/models',
-    'get_weights': None
 }
 
 
@@ -68,7 +67,7 @@ def main(parameters):
 
     df = parse_dataset(parameters['dataset_path'])
 
-    data_generator = UtkFaceDataGenerator(df, dataset_dict, TRAIN_TEST_SPLIT, IM_WIDTH, IM_HEIGHT, get_weight=parameters['get_weights'])
+    data_generator = UtkFaceDataGenerator(df, dataset_dict, TRAIN_TEST_SPLIT, IM_WIDTH, IM_HEIGHT,)
     train_idx, valid_idx, test_idx = data_generator.generate_split_indexes()
 
     # ----------------
