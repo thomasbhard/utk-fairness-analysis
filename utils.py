@@ -1,3 +1,6 @@
+"""
+Utility functions for plotting, formating, etc. used in the notebooks.
+"""
 from IPython.display import set_matplotlib_formats
 import os
 import glob
@@ -15,7 +18,7 @@ sns.set()
 
 # PLOTTING SETTUP
 
-set_matplotlib_formats('svg')
+#set_matplotlib_formats('svg')
 colors = ['#edf8e9', '#c7e9c0', '#a1d99b', '#74c476', '#31a354', '#006d2c']
 
 IM_WIDTH = IM_HEIGHT = 198

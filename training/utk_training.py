@@ -15,13 +15,13 @@ default_parameters = {
     'IM_WIDTH': 198,
     'IM_HEIGHT': 198,
     'TRAIN_TEST_SPLIT': 0.7,
-    'TRAIN_WITH_WEIGHTS': False,
+    'TRAIN_WITH_WEIGHTS': True,
     'INIT_LR': 1e-4,
     'EPOCHS': 1,
     'BATCH_SIZE': 32,
     'BATCH_SIZE_VALID': 32,
     'BATCH_SIZE_TEST': 128,
-    'dataset_path': '/content/UTKFaceFull/UTKFace',
+    'dataset_path': r'C:\Users\thoma\Documents\_FAIRALGOS\utk-fairness-analysis\dataset\UTKFace',
     'output_dir': '/content/models',
 }
 
@@ -97,6 +97,17 @@ def main(parameters):
     train_gen = data_generator.generate_images(train_idx, is_training=True, batch_size=batch_size, include_weights=TRAIN_WITH_WEIGHTS)
     valid_gen = data_generator.generate_images(valid_idx, is_training=True, batch_size=valid_batch_size, include_weights=TRAIN_WITH_WEIGHTS)
 
+    i = 0
+
+    for samp in train_gen:
+        age = samp[1][0]
+        weight = samp[2]
+        
+        print(age, weight)
+        break
+    print('end')
+    exit(-1)
+
     callbacks = [
         ModelCheckpoint(os.path.join(outputdir_path, "model_checkpoint"), monitor='val_loss')
     ]
@@ -164,3 +175,7 @@ def main(parameters):
     df_prediction['files'] = files
 
     df_prediction.to_csv(os.path.join(outputdir_path, 'predictions.csv'))
+
+
+if __name__ == "__main__":
+    main(default_parameters)

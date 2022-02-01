@@ -18,7 +18,7 @@ class UtkFaceDataGenerator():
           self.get_weight = get_weight
         else:
           # if there is no function for get_weight specified return 1 for all samples
-          self.get_weight = lambda g,r,a: 1.5 if (a == 0) else 0.5
+          self.get_weight = lambda g,r,a: 1.5 if (a < 10/116) else 0.5
         
     def generate_split_indexes(self):
         p = np.random.RandomState(seed=42).permutation(len(self.df))
